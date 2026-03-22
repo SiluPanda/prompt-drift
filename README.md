@@ -3,6 +3,7 @@
 Detect silent LLM output changes over time via semantic drift analysis.
 
 [![npm version](https://img.shields.io/npm/v/prompt-drift.svg)](https://www.npmjs.com/package/prompt-drift)
+[![npm downloads](https://img.shields.io/npm/dt/prompt-drift.svg)](https://www.npmjs.com/package/prompt-drift)
 [![license](https://img.shields.io/npm/l/prompt-drift.svg)](https://github.com/SiluPanda/prompt-drift/blob/master/LICENSE)
 [![node](https://img.shields.io/node/v/prompt-drift.svg)](https://nodejs.org)
 
