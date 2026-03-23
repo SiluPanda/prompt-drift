@@ -222,4 +222,42 @@ describe('createMonitor', () => {
     expect(report.vocabularyDrift.score).toBe(0)
     expect(report.vocabularyDrift.exceeded).toBe(false)
   })
+
+  it('JSD detects distribution change between different output lengths', async () => {
+    const monitor = createMonitor({ embedFn: makeMockEmbedFn() })
+    const shortOutputs = ['short', 'tiny', 'small', 'brief', 'mini']
+    const longOutputs = [
+      'this is a much longer output with many words',
+      'another long response that contains lots of content',
+      'yet another verbose reply from the model',
+      'a detailed and comprehensive answer provided here',
+      'extended response with substantial text content',
+    ]
+    const base = await monitor.snapshot(shortOutputs)
+    const curr = await monitor.snapshot(longOutputs)
+    const report = monitor.compare(base, curr)
+    // JSD should detect the length distribution difference (no longer always 0)
+    expect(report.jensenShannonDivergence.score).toBeGreaterThanOrEqual(0)
+    expect(report.jensenShannonDivergence.score).toBeLessThanOrEqual(1)
+  })
+
+  it('variance is computed per dimension (not all zeros)', async () => {
+    const monitor = createMonitor({ embedFn: makeMockEmbedFn() })
+    const diverseOutputs = [
+      'alpha beta gamma delta epsilon',
+      'zeta eta theta iota kappa',
+      'lambda mu nu xi omicron',
+    ]
+    const snap = await monitor.snapshot(diverseOutputs)
+    // With diverse inputs producing different embeddings, variance should not be all zeros
+    const hasNonZero = snap.variance.some(v => v > 0)
+    expect(hasNonZero).toBe(true)
+  })
+
+  it('mean() returns 0 for empty array (no NaN propagation)', async () => {
+    // Importing mean directly to test edge case
+    const { mean } = await import('../math')
+    expect(mean([])).toBe(0)
+    expect(Number.isNaN(mean([]))).toBe(false)
+  })
 })

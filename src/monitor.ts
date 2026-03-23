@@ -44,7 +44,11 @@ export function createMonitor(options: MonitorOptions): DriftMonitor {
     const embeddings = await Promise.all(outputs.map(t => options.embedFn(t)))
     const c = centroid(embeddings)
     const pairwise = computePairwiseSimilarity(embeddings)
-    const variance = c.map(() => 0)
+    const variance = c.map((mu, i) =>
+      embeddings.length <= 1
+        ? 0
+        : embeddings.reduce((s, e) => s + (e[i] - mu) ** 2, 0) / embeddings.length
+    )
     return {
       id: randomUUID(),
       promptId,
