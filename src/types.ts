@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto'
-
 export type EmbedFn = (text: string) => Promise<number[]>
 export type LlmFn = (prompt: string) => Promise<string>
 export type DriftSeverity = 'none' | 'low' | 'medium' | 'high' | 'critical'
@@ -94,5 +92,3 @@ export interface DriftMonitor {
   readonly hasBaseline: boolean
 }
 
-// Re-export randomUUID to avoid unused import warning in types.ts
-export { randomUUID }

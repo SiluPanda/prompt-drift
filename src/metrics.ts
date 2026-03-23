@@ -36,14 +36,8 @@ export function metricJSD(
   threshold: number
 ): MetricResult {
   const bins = 10
-  const baseHist = histogramBins(
-    base.samples.map(() => base.meanPairwiseSimilarity),
-    bins
-  )
-  const currHist = histogramBins(
-    curr.samples.map(() => curr.meanPairwiseSimilarity),
-    bins
-  )
+  const baseHist = histogramBins(base.samples.map(s => s.length), bins)
+  const currHist = histogramBins(curr.samples.map(s => s.length), bins)
   const jsd = jensenShannonDivergence(baseHist, currHist)
   return { score: Math.min(1, jsd), exceeded: jsd > threshold }
 }

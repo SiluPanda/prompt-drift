@@ -10,6 +10,7 @@ export function cosine(a: number[], b: number[]): number {
 }
 
 export function mean(arr: number[]): number {
+  if (arr.length === 0) return 0
   return arr.reduce((s, v) => s + v, 0) / arr.length
 }
 
